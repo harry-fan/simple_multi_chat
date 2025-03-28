@@ -1,0 +1,14 @@
+#编译临时文件
+.*.d
+*/.*.d
+*/*/.*.d
+*.o
+*/*.o
+*/*/*.o
+
+git.version
+
+.idea
+*.out
+build
+cmake-build-debug

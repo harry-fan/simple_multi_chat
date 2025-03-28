@@ -6,6 +6,8 @@
 #include <vector>
 #include <mutex>
 
+#define MAX_EVENTS 1024
+
 class ChatServer {
 public:
     ChatServer(int port);
