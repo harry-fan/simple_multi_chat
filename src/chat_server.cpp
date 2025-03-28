@@ -68,8 +68,12 @@ void ChatServer::run() {
 }
 
 void ChatServer::handleClient(int clientSocket) {
-    char buffer[1024];
+    int32_t bodySize = 0;
+    int32_t recvSize = 0;
+    std::string recvMessage = "";
+    const NetworkData *head = NULL;
     while (true) {
+        char buffer[1024] = {0};
         ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
         if (bytesRead <= 0) {
             if (bytesRead == 0) {
@@ -85,9 +89,24 @@ void ChatServer::handleClient(int clientSocket) {
             }
             break;
         } else {
-            std::string message(buffer, bytesRead);
-            std::cout << "Received message from: " << clientSocket << "|message: " << message << std::endl;
-            std::string sendMessage = "Message from:" + std::to_string(clientSocket) + "|" + message;
+            if (head == NULL) {
+                head = reinterpret_cast<const NetworkData *>(buffer);
+                bodySize = ntohl(head->packetSize);
+                if (bytesRead < sizeof(NetworkData)) {
+                    std::cout << "Received message error!" << clientSocket << "|" << bytesRead << std::endl;
+                    return;
+                }
+                recvSize += bytesRead - sizeof(NetworkData);
+                recvMessage += std::string(buffer + sizeof(NetworkData), recvSize);
+            } else {
+                recvSize += bytesRead;
+                recvMessage += std::string(buffer, bytesRead);
+            }
+            if (recvSize < bodySize) {
+                continue;
+            }
+            std::cout << "Received message from: " << clientSocket << "|message: " << recvMessage << std::endl;
+            std::string sendMessage = "Message from:" + std::to_string(clientSocket) + "|" + recvMessage;
             broadcastMessage(sendMessage, clientSocket);
             break;
         }

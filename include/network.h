@@ -4,6 +4,11 @@
 #include <string>
 #include <vector>
 
+struct NetworkData {
+    int32_t packetSize;
+    // char content[0]
+};
+
 class Network {
 public:
     Network();
@@ -12,7 +17,6 @@ public:
     bool startServer(int port);
     bool connectToServer(const std::string& ip, int port);
     void sendData(int clientSock, const std::string& data);
-    std::string receiveData();
     int getServerSocket();
     int getClientSocket();
     void setClientSocket(int clientSock);

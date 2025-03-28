@@ -70,13 +70,12 @@ bool Network::connectToServer(const std::string& ip, int port) {
 }
 
 void Network::sendData(int clientSock, const std::string& data) {
-    send(clientSock, data.c_str(), data.size(), 0);
-}
-
-std::string Network::receiveData() {
-    char buffer[1024] = {0};
-    int valread = read(clientSocket, buffer, 1024);
-    return std::string(buffer, valread);
+    NetworkData sendData;
+    std::string sendMessage;
+    sendData.packetSize = htonl(data.size());
+    sendMessage.assign((char *)&sendData, sizeof(sendData));
+    sendMessage.append(data);
+    send(clientSock, sendMessage.c_str(), sendMessage.size(), 0);
 }
 
 int Network::getServerSocket() {
