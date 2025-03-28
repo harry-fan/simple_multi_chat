@@ -85,11 +85,3 @@ int Network::getServerSocket() {
 int Network::getClientSocket() {
     return clientSocket;
 }
-
-void Network::setClientSocket(int clientSock) {
-    clientSocket = clientSock;
-}
-
-void Network::setServerSocket(int serverSock) {
-    serverSocket = serverSock;
-}

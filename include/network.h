@@ -19,8 +19,6 @@ public:
     void sendData(int clientSock, const std::string& data);
     int getServerSocket();
     int getClientSocket();
-    void setClientSocket(int clientSock);
-    void setServerSocket(int serverSock);
 
 private:
     int clientSocket;
